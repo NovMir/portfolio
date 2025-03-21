@@ -1,0 +1,22 @@
+---
+import BaseLayout from '../../layouts/ScrollLayout.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  return posts.map((post) => ({
+    params: { id: post.slug },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await post.render();
+---
+
+<BaseLayout title={post.data.title} description={post.data.excerpt}>
+  <article class="prose prose-pink dark:prose-invert mx-auto py-16">
+    <h1>{post.data.title}</h1>
+    <Content />
+  </article>
+</BaseLayout>

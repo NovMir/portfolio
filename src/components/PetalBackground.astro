@@ -4,10 +4,9 @@
 interface Props {
   petalCount?: number;
   className?: string;
-  scrollFade?: boolean;
 }
 
-const { petalCount = 20, className = "", scrollFade = true } = Astro.props;
+const { petalCount = 20, className = "" } = Astro.props;
 
 // Define petal shapes - these will be randomly selected
 const petalShapes = [
@@ -42,7 +41,7 @@ const petals = Array.from({ length: petalCount }).map((_, i) => {
 });
 ---
 
-<div id="petal-container" class={`absolute inset-0 w-full h-full pointer-events-none overflow-hidden ${className}`} aria-hidden="true">
+<div class={`absolute inset-0 w-full h-full pointer-events-none overflow-hidden ${className}`} aria-hidden="true">
   <svg 
     class="absolute inset-0 w-full h-full" 
     viewBox="0 0 100 100" 
@@ -95,27 +94,3 @@ const petals = Array.from({ length: petalCount }).map((_, i) => {
     will-change: transform;
   }
 </style>
-
-{scrollFade && (
-<script>
-  // Improved scroll handling for petal animation
-  document.addEventListener('DOMContentLoaded', () => {
-    const petalContainer = document.getElementById('petal-container');
-    if (!petalContainer) return;
-    
-    window.addEventListener('scroll', () => {
-      // Calculate how far down the page has been scrolled
-      const scrollPosition = window.scrollY;
-      const viewportHeight = window.innerHeight;
-      const scrollPercentage = Math.min(scrollPosition / (viewportHeight * 0.7), 1);
-      
-      // Apply opacity and blur based on scroll percentage
-      const opacityValue = 1 - scrollPercentage * 0.9; // Fades to almost zero
-      const blurAmount = scrollPercentage * 5; // Up to 5px blur
-      
-      petalContainer.style.opacity = `${opacityValue}`;
-      petalContainer.style.filter = `blur(${blurAmount}px)`;
-    });
-  });
-</script>
-)}

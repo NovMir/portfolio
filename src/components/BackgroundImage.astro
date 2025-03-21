@@ -1,0 +1,65 @@
+---
+interface Props {
+  imageUrl: string;
+  gradient?: boolean;
+  className?: string;
+  children?: any;
+}
+
+const { 
+  imageUrl, 
+  gradient = true, 
+  className = "",
+  children
+} = Astro.props;
+---
+
+<div 
+  id="background-container" 
+  class={`fixed w-full top-0 left-0 z-0 bg-cover bg-center bg-no-repeat ${className}`}
+  style={`background-image: url(${imageUrl});`}
+>
+  {gradient && (
+    <div class="absolute inset-0 bg-gradient-to-t from-fairy_tale-100/90 dark:from-fairy_tale-100/95 to-transparent"></div>
+  )}
+  {children}
+</div>
+
+<script>
+  // Handle background height and scroll effects
+  document.addEventListener('DOMContentLoaded', () => {
+    const backgroundContainer = document.getElementById('background-container');
+    if (!backgroundContainer) return;
+    
+    // Set initial height to match viewport
+    const updateHeight = () => {
+      const viewportHeight = window.innerHeight;
+      backgroundContainer.style.height = `${viewportHeight}px`;
+    };
+    
+    // Update height on load and resize
+    updateHeight();
+    window.addEventListener('resize', updateHeight);
+    
+    // Scroll-based blur and opacity effects
+    window.addEventListener('scroll', () => {
+      const scrollPosition = window.scrollY;
+      const viewportHeight = window.innerHeight;
+      const scrollPercentage = Math.min(scrollPosition / (viewportHeight * 0.6), 1);
+      
+      // Apply blur and opacity based on scroll percentage
+      const blurAmount = scrollPercentage * 10; // Max 10px blur
+      const opacityValue = 1 - scrollPercentage * 0.5; // Min 0.5 opacity
+      
+      backgroundContainer.style.filter = `blur(${blurAmount}px)`;
+      backgroundContainer.style.opacity = `${opacityValue}`;
+    });
+  });
+</script>
+
+<style>
+  #background-container {
+    transition: filter 0.2s ease-out, opacity 0.2s ease-out;
+    will-change: filter, opacity;
+  }
+</style> 

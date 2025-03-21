@@ -1,0 +1,58 @@
+---
+interface Props {
+  targetId: string;
+  fadeAmount?: number;
+  blurAmount?: number;
+  className?: string;
+  children?: any;
+}
+
+const { 
+  targetId, 
+  fadeAmount = 0.9, 
+  blurAmount = 5,
+  className = "",
+  children
+} = Astro.props;
+---
+
+<div id={targetId} class={className}>
+  {children}
+</div>
+
+<script>
+  const targetId = document.currentScript?.getAttribute('data-target-id');
+  const fadeAmount = parseFloat(document.currentScript?.getAttribute('data-fade-amount') || '0.9');
+  const blurAmount = parseFloat(document.currentScript?.getAttribute('data-blur-amount') || '5');
+
+  document.addEventListener('DOMContentLoaded', () => {
+    if (!targetId) return;
+    const target = document.getElementById(targetId);
+    if (!target) return;
+    
+    window.addEventListener('scroll', () => {
+      const scrollPosition = window.scrollY;
+      const viewportHeight = window.innerHeight;
+      const scrollPercentage = Math.min(scrollPosition / (viewportHeight * 0.7), 1);
+      
+      const opacityValue = 1 - scrollPercentage * fadeAmount;
+      const blurValue = scrollPercentage * blurAmount;
+      
+      target.style.opacity = `${opacityValue}`;
+      target.style.filter = `blur(${blurValue}px)`;
+    });
+  });
+</script>
+
+<script is:inline>
+  document.currentScript?.setAttribute('data-target-id', '{targetId}');
+  document.currentScript?.setAttribute('data-fade-amount', '{fadeAmount}');
+  document.currentScript?.setAttribute('data-blur-amount', '{blurAmount}');
+</script>
+
+<style>
+  [id] {
+    transition: filter 0.2s ease-out, opacity 0.2s ease-out;
+    will-change: filter, opacity;
+  }
+</style> 

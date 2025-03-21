@@ -1,5 +1,7 @@
 ---
-import SVGPetalsAnimation from './PetalBackground.astro';
+import BackgroundImage from './BackgroundImage.astro';
+import ScrollEffect from './ScrollEffect.astro';
+import PetalBackground from './PetalBackground.astro';
 
 interface Props {
   frontmatter?: {
@@ -33,21 +35,15 @@ const hasBackgroundImage = !!backgroundImage;
 ---
 
 <div class="relative w-full">
-  <!-- Fixed background image container with gradient overlay -->
+  <!-- Background with scroll effects -->
   {hasBackgroundImage && (
-    <div 
-      id="hero-background" 
-      class="fixed w-full top-0 left-0 z-0 bg-cover bg-center bg-no-repeat"
-      style={`background-image: url(${backgroundImage});`}
-    >
-      <!-- Gradient overlay for better text readability -->
-      <div class="absolute inset-0 bg-gradient-to-t from-fairy_tale-100/90 dark:from-fairy_tale-100/95 to-transparent"></div>
-      
-      <!-- SVG Petal animation -->
+    <BackgroundImage imageUrl={backgroundImage}>
       {showPetals && (
-        <SVGPetalsAnimation petalCount={petalCount} scrollFade={true} className="z-10" />
+        <ScrollEffect targetId="petal-container" fadeAmount={0.9} blurAmount={5}>
+          <PetalBackground petalCount={petalCount} className="z-10" />
+        </ScrollEffect>
       )}
-    </div>
+    </BackgroundImage>
   )}
   
   <!-- Responsive content container -->

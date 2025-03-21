@@ -1,0 +1,20 @@
+---
+import BaseLayout from '../../layouts/ScrollLayout.astro';
+import PostPreview from '../../components/PostPreview.astro';
+import { getCollection } from 'astro:content';
+import { sortItemsByDateDesc } from '../../js/utils';
+
+const posts = await getCollection('blog', (post) => !post.data.draft);
+const sortedPosts = posts.sort(sortItemsByDateDesc);
+---
+
+<BaseLayout title="Blog" description="Explore my latest blog posts">
+  <div class="container mx-auto px-4 py-16">
+    <h1 class="text-4xl font-serif italic text-pink-700 dark:text-softpink mb-8">Blog</h1>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {sortedPosts.map((post) => (
+        <PostPreview post={post} />
+      ))}
+    </div>
+  </div>
+</BaseLayout>
