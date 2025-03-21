@@ -1,0 +1,141 @@
+---
+import siteConfig from '../data/sitedata.config';
+import NavLink from './NavLink.astro';
+import DarkModeToggle from './DarkModeToggle.astro';
+import Button from './Button.astro';
+
+// Optional: Logo component if you have a logo in your config
+const logo = siteConfig.logo;
+
+const { headerNavLinks = [] } = siteConfig;
+---
+
+
+  <div class="container flex h-16 items-center justify-between">
+    <div class="flex items-center gap-6">
+      <a href="/" class="font-heading text-2xl font-bold text-mountbatten_pink-500 dark:text-mountbatten_pink-300">
+        {logo ? (
+          <img src={logo.src} alt={logo.alt || siteConfig.title} class="h-8" />
+        ) : (
+          siteConfig.title
+        )}
+      </a>
+      
+      <!-- Desktop Navigation -->
+      <nav class="hidden md:flex items-center space-x-6">
+        {headerNavLinks.map((link) => (
+          <NavLink href={link.href}>{link.text}</NavLink>
+        ))}
+        <DarkModeToggle />
+        <Button href="/contact" size="sm" variant="primary">Get in Touch</Button>
+      </nav>
+    </div>
+    
+    <!-- Mobile Navigation -->
+    <div class="flex items-center md:hidden">
+      <DarkModeToggle />
+      <button
+        id="menu-toggle"
+        class="ml-2 p-2 rounded-md text-fairy_tale-300 dark:text-fairy_tale-400 hover:bg-fairy_tale-100 dark:hover:bg-fairy_tale-800"
+        aria-label="Toggle menu"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-6 w-6"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          id="menu-icon"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M4 6h16M4 12h16M4 18h16"
+          />
+        </svg>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="hidden h-6 w-6"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          id="close-icon"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M6 18L18 6M6 6l12 12"
+          />
+        </svg>
+      </button>
+    </div>
+  </div>
+  
+  <!-- Mobile Menu (Hidden by default) -->
+  <div
+    id="mobile-menu"
+    class="fixed inset-0 z-50 hidden flex-col bg-white dark:bg-raisin_black/95 pt-24 px-4 pb-8"
+  >
+    <nav class="flex flex-col space-y-6 text-center">
+      {headerNavLinks.map((link) => (
+        <a
+          href={link.href}
+          class="text-lg font-medium text-fairy_tale-800 dark:text-fairy_tale-200 hover:text-blush-500 dark:hover:text-blush-400 py-2"
+        >
+          {link.text}
+        </a>
+      ))}
+      <div class="pt-6">
+        <Button href="/contact" variant="primary" fullWidth>Get in Touch</Button>
+      </div>
+    </nav>
+  </div>
+
+
+<script>
+  // Mobile menu toggle
+  const menuToggle = document.getElementById('menu-toggle');
+  const mobileMenu = document.getElementById('mobile-menu');
+  const menuIcon = document.getElementById('menu-icon');
+  const closeIcon = document.getElementById('close-icon');
+  const body = document.body;
+
+  menuToggle?.addEventListener('click', () => {
+    if (mobileMenu) {
+      mobileMenu.classList.toggle('hidden');
+      mobileMenu.classList.toggle('flex');
+    }
+    menuIcon?.classList.toggle('hidden');
+    closeIcon?.classList.toggle('hidden');
+    body.classList.toggle('overflow-hidden'); // Prevent scrolling when menu is open
+  });
+
+  // Close mobile menu when clicking on a link
+  const mobileLinks = mobileMenu?.querySelectorAll('a');
+  mobileLinks?.forEach((link) => {
+    link.addEventListener('click', () => {
+      if (mobileMenu) {
+        mobileMenu.classList.add('hidden');
+        mobileMenu.classList.remove('flex');
+      }
+      menuIcon?.classList.remove('hidden');
+      closeIcon?.classList.add('hidden');
+      body.classList.remove('overflow-hidden');
+    });
+  });
+
+  // Close mobile menu when the window resizes to desktop size
+  window.addEventListener('resize', () => {
+    if (window.innerWidth >= 768) { // 768px is the md breakpoint in Tailwind
+      if (mobileMenu) {
+        mobileMenu.classList.add('hidden');
+        mobileMenu.classList.remove('flex');
+      }
+      menuIcon?.classList.remove('hidden');
+      closeIcon?.classList.add('hidden');
+      body.classList.remove('overflow-hidden');
+    }
+  });
+</script>

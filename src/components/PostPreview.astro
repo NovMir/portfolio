@@ -1,0 +1,55 @@
+---
+import { type CollectionEntry } from 'astro:content';
+import FormattedDate from './FormattedDate.astro';
+import { slugify } from '../js/utils';
+
+type Props = { 
+  post: CollectionEntry<'blog'>; 
+  class?: string; 
+  headingLevel?: 'h2' | 'h3';
+};
+
+const { post, class: className = '', headingLevel = 'h2' } = Astro.props;
+const { title, excerpt, publishDate, image, tags } = post.data;
+
+const slug = slugify(title);
+const TitleTag = headingLevel;
+---
+<article class:list={['group border border-fairy_tale-200 dark:border-fairy_tale-700 rounded-xl p-4 bg-white dark:bg-raisin_black/50 shadow-sm hover:shadow-md transition', className]}>
+  {image && (
+    <a href={`/blog/${slug}/`} class="block mb-3 overflow-hidden rounded-md">
+      <img 
+        src={image.src} 
+        alt={image.alt || title} 
+        class="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-105 rounded-md"
+        loading="lazy"
+      />
+    </a>
+  )}
+
+  <TitleTag class="text-lg font-semibold text-pink-700 dark:text-softpink">
+    <a href={`/blog/${slug}/`} class="hover:underline hover:underline-offset-4">
+      {title}
+    </a>
+  </TitleTag>
+
+  <p class="mt-1 text-xs text-fairy_tale-500 dark:text-fairy_tale-400">
+    <FormattedDate date={publishDate}/>
+  </p>
+
+  {excerpt && (
+    <p class="mt-2 text-sm text-fairy_tale-700 dark:text-fairy_tale-300 leading-relaxed">
+      {excerpt}
+    </p>
+  )}
+
+  {tags && tags.length > 0 && (
+    <div class="mt-3 flex flex-wrap gap-2 text-xs">
+      {tags.map((tag: string) => (
+        <span class="bg-pink-100 dark:bg-pink-dark/20 text-pink-700 dark:text-pink-200 px-2 py-0.5 rounded-full">
+          #{tag}
+        </span>
+      ))}
+    </div>
+  )}
+</article>

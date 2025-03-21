@@ -1,0 +1,97 @@
+---
+// SVG-based petal animation
+// This is a simpler alternative that doesn't require canvas
+
+interface Props {
+  petalCount?: number;
+  className?: string;
+}
+
+const { petalCount = 20, className = "" } = Astro.props;
+
+// Define petal shapes - these will be randomly selected
+const petalShapes = [
+  "M0,0 C3,-8 17,-8 20,0 C17,6 3,6 0,0",    // Smaller, delicate oval
+  "M0,0 C2,-10 18,-10 20,0 C18,6 2,6 0,0",   // Thin, elegant petal
+  "M0,0 C5,-12 15,-12 20,0 C15,8 5,8 0,0",   // Soft, rounded petal
+  "M0,0 C6,-14 14,-14 20,0 C14,10 6,10 0,0", // Heart-like petal
+  "M0,0 C4,-10 16,-10 20,0 C16,8 4,8 0,0",   // Curved petal
+  "M0,0 C3,-12 17,-12 20,0 C17,8 3,8 0,0",   // Asymmetric petal
+  "M0,0 C2,-11 18,-11 20,0 C18,7 2,7 0,0",   // Wide, flat petal
+  "M0,0 C4,-9 16,-9 20,0 C16,7 4,7 0,0"      // Small, round petal
+];
+
+// Define petal colors
+const petalColors = ['#FFDEE2', '#FFBDC5', '#FF9CA8', '#FFF0F2', '#FDE1D3'];
+
+// Generate random petals
+const petals = Array.from({ length: petalCount }).map((_, i) => {
+  return {
+    id: `petal-${i}`,
+    x: Math.random() * 100, // Position as percentage
+    y: -10 - Math.random() * 20, // Increased starting height variation
+    size: Math.random() * 8 + 4, // Even smaller size range (4-12)
+    rotation: Math.random() * 360,
+    color: petalColors[Math.floor(Math.random() * petalColors.length)],
+    shape: petalShapes[Math.floor(Math.random() * petalShapes.length)],
+    // Animation properties
+    duration: Math.random() * 10 + 6, // 6-16 seconds to fall
+    delay: Math.random() * 2, // 0-2 second delay
+    swayAmount: Math.random() * 4 + 1 // 1-5% horizontal sway for more natural movement
+  };
+});
+---
+
+<div class={`absolute inset-0 w-full h-full pointer-events-none overflow-hidden ${className}`} aria-hidden="true">
+  <svg 
+    class="absolute inset-0 w-full h-full" 
+    viewBox="0 0 100 100" 
+    preserveAspectRatio="none"
+  >
+    {petals.map((petal) => (
+      <g class="svg-petal">
+        <path 
+          d={petal.shape} 
+          fill={petal.color} 
+          opacity="0.6"
+          transform={`translate(${petal.x}, ${petal.y}) scale(${petal.size / 20}) rotate(${petal.rotation})`}
+        >
+          <animateTransform
+            attributeName="transform"
+            type="translate"
+            values={`${petal.x},${petal.y}; ${petal.x - petal.swayAmount},30; ${petal.x + petal.swayAmount},70; ${petal.x - petal.swayAmount/2},110`}
+            dur={`${petal.duration}s`}
+            begin={`${petal.delay}s`}
+            repeatCount="indefinite"
+            calcMode="spline"
+            keySplines="0.4 0 0.6 1; 0.4 0 0.6 1; 0.4 0 0.6 1"
+          />
+          <animateTransform
+            attributeName="transform"
+            type="rotate"
+            values={`${petal.rotation}; ${petal.rotation + 45}; ${petal.rotation + 90}; ${petal.rotation + 180}`}
+            dur={`${petal.duration * 0.8}s`}
+            begin={`${petal.delay}s`}
+            repeatCount="indefinite"
+            additive="sum"
+          />
+          <animateTransform
+            attributeName="transform"
+            type="scale" 
+            values={`${petal.size / 20}; ${petal.size / 20}; ${petal.size / 20}`}
+            dur={`${petal.duration}s`}
+            begin={`${petal.delay}s`}
+            repeatCount="indefinite"
+            additive="sum"
+          />
+        </path>
+      </g>
+    ))}
+  </svg>
+</div>
+
+<style>
+  .svg-petal {
+    will-change: transform;
+  }
+</style>

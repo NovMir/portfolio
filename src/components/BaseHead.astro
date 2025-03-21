@@ -1,0 +1,65 @@
+---
+import siteData from "../data/sitedata.config";
+import jsonLDGenerator from "../js/jsonLD";
+
+import '../styles/global.css';
+import fraunces from '../fonts/Fraunces-Regular.woff2';
+import outfit from '../fonts/Outfit-Regular.woff2';
+
+
+const { 
+  title = siteData.title,
+  description = siteData.description,
+  image = siteData.image,
+  frontmatter,
+  robots = "index,follow",
+  url = Astro.url
+} = Astro.props;
+
+// Generate structured data dynamically
+const jsonLD = jsonLDGenerator({
+  type: frontmatter?.pageType || "website",
+  post: frontmatter,
+  url: url.toString(),
+});
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="robots" content={robots} />
+    <link rel="canonical" href={url} />
+     <!-- Font preloading -->
+     <link rel="preload" href={fraunces} as="font" type="font/woff2" crossorigin>
+     <link rel="preload" href={outfit} as="font" type="font/woff2" crossorigin>
+    <!-- Favicons -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    
+    <!-- Open Graph -->
+    <meta property="og:type" content={frontmatter?.pageType || "website"} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={image?.src} />
+    <meta property="og:url" content={url} />
+    <meta property="og:site_name" content={siteData.title} />
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content={siteData.social?.twitter} />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={image?.src} />
+    
+    <!-- JSON-LD -->
+    <Fragment set:html={jsonLD} />
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

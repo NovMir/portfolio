@@ -1,0 +1,89 @@
+---
+import siteConfig from '../data/sitedata.config';
+---
+
+<footer class="py-12 bg-fairy_tale-100 dark:bg-fairy_tale-200 text-fairy_tale-800 dark:text-fairy_tale-700">
+  <div class="container">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+      <div class="md:col-span-2">
+        <h3 class="text-xl font-heading font-bold text-blush-500 dark:text-blush-400 mb-4">
+          {siteConfig.title}
+        </h3>
+        <p class="mb-4">{siteConfig.description}</p>
+        
+        {siteConfig.subscribe && (
+          <div class="mt-6">
+            <h4 class="font-medium text-rose_pompadour-500 dark:text-rose_pompadour-400 mb-2">
+              {siteConfig.subscribe.title}
+            </h4>
+            <p class="text-sm mb-3">{siteConfig.subscribe.text}</p>
+            <form 
+              action={siteConfig.subscribe.formUrl} 
+              method="post" 
+              class="flex flex-col sm:flex-row gap-2"
+            >
+              <input 
+                type="email" 
+                name="email" 
+                placeholder="Your email" 
+                required
+                class="px-4 py-2 rounded-md border border-fairy_tale-300 dark:border-fairy_tale-600 bg-white dark:bg-fairy_tale-100 text-fairy_tale-800 dark:text-fairy_tale-200 focus:outline-none focus:ring-2 focus:ring-blush-400"
+              />
+              <button 
+                type="submit"
+                class="px-4 py-2 bg-rose_pompadour-500 hover:bg-rose_pompadour-400 text-white rounded-md transition-colors"
+              >
+                Subscribe
+              </button>
+            </form>
+          </div>
+        )}
+      </div>
+      
+      {siteConfig.footerNavLinks && siteConfig.footerNavLinks.length > 0 && (
+        <div>
+          <h3 class="text-lg font-medium text-fairy_tale-800 dark:text-fairy_tale-300 mb-4">Links</h3>
+          <ul class="space-y-2">
+            {siteConfig.footerNavLinks.map((link) => (
+              <li>
+                <a 
+                  href={link.href} 
+                  class="text-fairy_tale-600 dark:text-fairy_tale-400 hover:text-blush-500 dark:hover:text-blush-400 transition-colors"
+                >
+                  {link.text}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+      
+      {siteConfig.socialLinks && siteConfig.socialLinks.length > 0 && (
+        <div>
+          <h3 class="text-lg font-medium text-fairy_tale-800 dark:text-fairy_tale-300 mb-4">Connect</h3>
+          <ul class="space-y-2">
+            {siteConfig.socialLinks.map((link) => (
+              <li>
+                <a 
+                  href={link.href} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  class="text-fairy_tale-600 dark:text-fairy_tale-400 hover:text-blush-500 dark:hover:text-blush-400 transition-colors"
+                >
+                  {link.text}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </div>
+    
+    <div class="pt-8 border-t border-fairy_tale-200 dark:border-fairy_tale-700 text-center text-sm text-fairy_tale-500 dark:text-fairy_tale-500">
+      <p>&copy; {new Date().getFullYear()} {siteConfig.title}. All rights reserved.</p>
+      {siteConfig.author && (
+        <p class="mt-2">Created by {siteConfig.author}</p>
+      )}
+    </div>
+  </div>
+</footer>

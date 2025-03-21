@@ -1,0 +1,37 @@
+---
+import BaseLayout from '../layouts/ScrollLayout.astro';
+
+import ProjectPreview from '../components/ProjectPreview.astro';
+import PostPreview from '../components/PostPreview.astro';
+import Button from '../components/Button.astro';
+import { getCollection } from 'astro:content';
+import { formatBlogPosts, sortItemsByDateDesc } from '../js/utils';
+import siteConfig from '../data/sitedata.config';
+
+const posts = (await getCollection('blog')).sort(formatBlogPosts).slice(0, 3);
+const projects = (await getCollection('projects')).sort(sortItemsByDateDesc).slice(0, 3);
+---
+
+<BaseLayout title={siteConfig.title} description={siteConfig.description}>
+  
+
+  <section id="projects" class="mb-24">
+    <h2 class="text-2xl font-serif italic mb-8">Featured Projects</h2>
+    {projects.map((project) => (
+      <ProjectPreview project={project} />
+    ))}
+    <div class="mt-6">
+      <Button href="/portfolio">View All Projects</Button>
+    </div>
+  </section>
+
+  <section id="blog" class="mb-24">
+    <h2 class="text-2xl font-serif italic mb-8">Latest Blog Posts</h2>
+    {posts.map((post) => (
+      <PostPreview post={post} />
+    ))}
+    <div class="mt-6">
+      <Button href="/blog">View All Posts</Button>
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,30 @@
+---
+import siteConfig from '../data/sitedata.config';
+import NavBar from './NavBar.astro';
+
+const { logo } = siteConfig;
+---
+
+<header class="sticky top-0 z-40 w-full border-b border-fairy_tale-200 dark:border-fairy_tale-800 bg-white/80 dark:bg-raisin_black/90 backdrop-blur supports-backdrop-blur:bg-white/60">
+  <div class="container mx-auto px-4 h-16 flex items-center justify-between">
+    <!-- Logo -->
+    <div class="flex items-center">
+      <a href="/" class="flex items-center" aria-label="Go to homepage">
+        {logo ? (
+          <img 
+            src={logo.src} 
+            alt={logo.alt || siteConfig.title} 
+            class="h-8 w-auto"
+          />
+        ) : (
+          <span class="font-heading text-xl font-bold text-blush-500 dark:text-amaranth_pink-400">
+            {siteConfig.title}
+          </span>
+        )}
+      </a>
+    </div>
+
+    <!-- Navigation -->
+    <NavBar />
+  </div>
+</header>

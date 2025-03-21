@@ -1,0 +1,88 @@
+---
+import SVGPetalsAnimation from './PetalBackground.astro';
+
+// Get background image from frontmatter or default
+interface Props {
+  frontmatter?: {
+    cover?: string;
+    thumbnail?: string;
+    backgroundImage?: string;
+  };
+  height?: string;
+  showPetals?: boolean;
+  petalCount?: number;
+}
+
+const { 
+  frontmatter = {}, 
+  height = "40vh",
+  showPetals = true,
+  petalCount = 20
+} = Astro.props;
+
+// Determine background image with fallback cascade
+const backgroundImage = frontmatter.cover || 
+                        frontmatter.thumbnail || 
+                        frontmatter.backgroundImage || 
+                        "/images/default-background.jpg"; // Default fallback
+
+const hasBackgroundImage = !!backgroundImage;
+---
+
+<div class="relative">
+  <!-- The fixed background image container with gradient overlay -->
+  {hasBackgroundImage && (
+    <div 
+      id="hero-background" 
+      class="single_hero_background fixed w-full top-0 left-0 z-0 bg-cover bg-center bg-no-repeat"
+      style={`height: ${height}; background-image: url(${backgroundImage});`}
+    >
+      <!-- Gradient overlay for better text readability -->
+      <div class="absolute inset-0 bg-gradient-to-t from-fairy_tale-100/90 dark:from-fairy_tale-100/95 to-transparent"></div>
+      
+      <!-- SVG Petal animation - simpler and doesn't require client:load -->
+      {showPetals && (
+        <SVGPetalsAnimation petalCount={petalCount} className="z-10" />
+      )}
+    </div>
+  )}
+  
+  <!-- Spacer div that provides vertical space - height matches background -->
+  <div 
+    class={`hero-spacer relative z-10 w-full ${hasBackgroundImage ? "" : "bg-fairy_tale-100/10 dark:bg-fairy_tale-200/10"}`}
+    style={`height: ${height};`}
+  >
+    <slot />
+  </div>
+</div>
+
+<script>
+  // Scroll-based blur effect
+  window.addEventListener('scroll', () => {
+    const heroBackground = document.getElementById('hero-background');
+    if (!heroBackground) return;
+    
+    // Calculate how far down the page has been scrolled as a percentage of the viewport height
+    const scrollPosition = window.scrollY;
+    const viewportHeight = window.innerHeight;
+    const scrollPercentage = Math.min(scrollPosition / (viewportHeight * 0.6), 1);
+    
+    // Apply blur and opacity based on scroll percentage
+    const blurAmount = scrollPercentage * 10; // Max 10px blur
+    const opacityValue = 1 - scrollPercentage * 0.5; // Min 0.5 opacity
+    
+    heroBackground.style.filter = `blur(${blurAmount}px)`;
+    heroBackground.style.opacity = `${opacityValue}`;
+  });
+</script>
+
+<style>
+  .single_hero_background {
+    transition: filter 0.2s ease-out, opacity 0.2s ease-out;
+    will-change: filter, opacity;
+  }
+  
+  .hero-spacer {
+    margin-top: var(--header-height, 4rem); /* Add space below header */
+  }
+</style>

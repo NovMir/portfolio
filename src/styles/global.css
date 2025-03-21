@@ -1,0 +1,81 @@
+/* Import Tailwind and fonts first */
+@import './fonts.css';
+@import 'tailwindcss';
+
+/* ========================
+   Root Variables (Light)
+=========================== */
+:root {
+  /* Fonts */
+  --font-body: 'Outfit', system-ui, sans-serif;
+  --font-heading: 'Fraunces', Georgia, serif;
+
+  /* Font Sizes */
+  --fs-base: clamp(1rem, 0.34vw + 0.91rem, 1.19rem);
+  --fs-h1: clamp(2.5rem, 4vw + 1rem, 4rem);
+  --fs-h2: clamp(2rem, 3vw + 1rem, 3rem);
+  --fs-h3: clamp(1.5rem, 2vw + 1rem, 2rem);
+
+  /* Line Heights */
+  --lh-body: 1.5;
+  --lh-heading: 1.2;
+
+  /* Colors (HSL values) */
+  --background: 0 0% 100%;
+  --foreground: 245 10% 20%;
+
+  --pink-light: 335 80% 85%;
+  --pink: 335 80% 75%;
+  --pink-dark: 335 80% 55%;
+
+  --softpink-light: 335 50% 90%;
+  --softpink: 335 50% 80%;
+  --softpink-dark: 335 50% 60%;
+
+  /* Border Radius */
+  --radius-sm: 0.3rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 1rem;
+
+  /* Gradients */
+  --soft-gradient-start: rgba(240, 194, 214, 0.6);
+  --soft-gradient-end: rgba(195, 167, 186, 0.6);
+}
+
+/* ========================
+   Dark Mode Variables
+=========================== */
+.dark {
+  --background: 246 10% 20%;        /* Raisin Black */
+  --foreground: 330 61% 85%;        /* Fairy Tale */
+
+  --soft-gradient-start: rgba(53, 52, 63, 0.6);      /* Jet */
+  --soft-gradient-end: rgba(146, 120, 138, 0.6);     /* Mountbatten Pink */
+}
+
+/* ========================
+   Base Styles
+=========================== */
+body {
+  font-family: var(--font-body);
+  font-size: var(--fs-base);
+  line-height: var(--lh-body);
+  color: rgba(var(--foreground-rgb),1);
+  background-color: rgba(var(--background-rgb),1);
+  transition: background-color 0.3s ease-out, color 0.3s ease-out;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  line-height: var(--lh-heading);
+  font-weight: 700;
+}
+
+h1 { font-size: var(--fs-h1); }
+h2 { font-size: var(--fs-h2); }
+h3 { font-size: var(--fs-h3); }
+
+/* Smooth transitions */
+button, a {
+  transition: all 0.2s ease-in-out;
+}
