@@ -3,79 +3,238 @@
 @import 'tailwindcss';
 
 /* ========================
-   Root Variables (Light)
+   Root Variables (Light Mode)
 =========================== */
 :root {
   /* Fonts */
-  --font-body: 'Outfit', system-ui, sans-serif;
-  --font-heading: 'Fraunces', Georgia, serif;
+  --font-sans: 'Outfit Variable', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-serif: 'Fraunces Variable', Georgia, serif;
 
-  /* Font Sizes */
+  /* Font Sizes - Using clamp for responsive sizing */
   --fs-base: clamp(1rem, 0.34vw + 0.91rem, 1.19rem);
   --fs-h1: clamp(2.5rem, 4vw + 1rem, 4rem);
   --fs-h2: clamp(2rem, 3vw + 1rem, 3rem);
   --fs-h3: clamp(1.5rem, 2vw + 1rem, 2rem);
+  --fs-h4: clamp(1.25rem, 1vw + 1rem, 1.5rem);
+  --fs-small: clamp(0.8rem, 0.17vw + 0.76rem, 0.89rem);
 
   /* Line Heights */
   --lh-body: 1.5;
   --lh-heading: 1.2;
+  --lh-tight: 1.1;
+  --lh-loose: 1.8;
 
-  /* Colors (HSL values) */
-  --background: 0 0% 100%;
-  --foreground: 245 10% 20%;
+  /* Colors - Using HSL values for better theme transitions */
+  --color-fairy-tale-50: hsla(330, 61%, 97%, 1);
+  --color-fairy-tale-100: hsla(330, 61%, 94%, 1);
+  --color-fairy-tale-200: hsla(330, 61%, 89%, 1);
+  --color-fairy-tale-300: hsla(330, 61%, 75%, 1);
+  --color-fairy-tale-400: hsla(330, 61%, 65%, 1);
+  --color-fairy-tale-500: hsla(330, 61%, 55%, 1);
+  --color-fairy-tale-600: hsla(330, 61%, 45%, 1);
+  --color-fairy-tale-700: hsla(330, 61%, 35%, 1);
+  --color-fairy-tale-800: hsla(330, 61%, 25%, 1);
+  --color-fairy-tale-900: hsla(330, 61%, 15%, 1);
 
-  --pink-light: 335 80% 85%;
-  --pink: 335 80% 75%;
-  --pink-dark: 335 80% 55%;
+  --color-pink-50: hsla(335, 80%, 95%, 1);
+  --color-pink-100: hsla(335, 80%, 90%, 1);
+  --color-pink-200: hsla(335, 80%, 85%, 1);
+  --color-pink-300: hsla(335, 80%, 80%, 1);
+  --color-pink-400: hsla(335, 80%, 75%, 1);
+  --color-pink-500: hsla(335, 80%, 65%, 1);
+  --color-pink-600: hsla(335, 80%, 55%, 1);
+  --color-pink-700: hsla(335, 80%, 45%, 1);
+  --color-pink-800: hsla(335, 80%, 35%, 1);
+  --color-pink-900: hsla(335, 80%, 25%, 1);
 
-  --softpink-light: 335 50% 90%;
-  --softpink: 335 50% 80%;
-  --softpink-dark: 335 50% 60%;
+  --color-softpink-50: hsla(335, 50%, 95%, 1);
+  --color-softpink-100: hsla(335, 50%, 90%, 1);
+  --color-softpink-200: hsla(335, 50%, 85%, 1);
+  --color-softpink-300: hsla(335, 50%, 80%, 1);
+  --color-softpink-400: hsla(335, 50%, 70%, 1);
+  --color-softpink-500: hsla(335, 50%, 60%, 1);
+  --color-softpink-600: hsla(335, 50%, 50%, 1);
+  --color-softpink-700: hsla(335, 50%, 40%, 1);
+  --color-softpink-800: hsla(335, 50%, 30%, 1);
+  --color-softpink-900: hsla(335, 50%, 20%, 1);
+
+  /* Background and foreground */
+  --color-bg: 0 0% 100%;           /* White */
+  --color-fg: 246 10% 20%;         /* Raisin Black */
 
   /* Border Radius */
-  --radius-sm: 0.3rem;
+  --radius-sm: 0.25rem;
   --radius-md: 0.5rem;
   --radius-lg: 1rem;
+  --radius-xl: 1.5rem;
+  --radius-full: 9999px;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+
+  /* Transitions */
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-normal: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 500ms cubic-bezier(0.4, 0, 0.2, 1);
 
   /* Gradients */
-  --soft-gradient-start: rgba(240, 194, 214, 0.6);
-  --soft-gradient-end: rgba(195, 167, 186, 0.6);
+  --gradient-soft: linear-gradient(to right, rgba(255, 223, 235, 0.5), rgba(240, 194, 214, 0.5));
+  --gradient-pink: linear-gradient(135deg, var(--color-pink-400), var(--color-softpink-500));
 }
 
 /* ========================
    Dark Mode Variables
 =========================== */
 .dark {
-  --background: 246 10% 20%;        /* Raisin Black */
-  --foreground: 330 61% 85%;        /* Fairy Tale */
+  --color-bg: 246 10% 10%;         /* Darker Raisin Black */
+  --color-fg: 330 61% 90%;         /* Light Fairy Tale */
 
-  --soft-gradient-start: rgba(53, 52, 63, 0.6);      /* Jet */
-  --soft-gradient-end: rgba(146, 120, 138, 0.6);     /* Mountbatten Pink */
+  --gradient-soft: linear-gradient(to right, rgba(53, 52, 63, 0.8), rgba(32, 31, 38, 0.8));
+  --gradient-pink: linear-gradient(135deg, var(--color-pink-600), var(--color-softpink-800));
 }
 
 /* ========================
    Base Styles
 =========================== */
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+}
+
 body {
-  font-family: var(--font-body);
+  font-family: var(--font-sans);
   font-size: var(--fs-base);
   line-height: var(--lh-body);
-  color: rgba(var(--foreground-rgb),1);
-  background-color: rgba(var(--background-rgb),1);
-  transition: background-color 0.3s ease-out, color 0.3s ease-out;
+  color: hsl(var(--color-fg));
+  background-color: hsl(var(--color-bg));
+  transition: 
+    background-color var(--transition-normal),
+    color var(--transition-normal);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
+main {
+  flex: 1;
+}
+
+/* Headings */
 h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-heading);
+  font-family: var(--font-serif);
   line-height: var(--lh-heading);
   font-weight: 700;
+  margin-top: 1.5em;
+  margin-bottom: 0.5em;
 }
 
-h1 { font-size: var(--fs-h1); }
+h1 { font-size: var(--fs-h1); margin-top: 0; }
 h2 { font-size: var(--fs-h2); }
 h3 { font-size: var(--fs-h3); }
+h4 { font-size: var(--fs-h4); }
 
-/* Smooth transitions */
-button, a {
-  transition: all 0.2s ease-in-out;
+/* Links and Buttons */
+a, button {
+  transition: 
+    color var(--transition-fast),
+    background-color var(--transition-fast),
+    border-color var(--transition-fast),
+    transform var(--transition-fast);
+}
+
+a:hover, button:hover {
+  transform: translateY(-1px);
+}
+
+a:active, button:active {
+  transform: translateY(0);
+}
+
+/* Images */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Focus Styles */
+:focus-visible {
+  outline: 2px solid var(--color-pink-500);
+  outline-offset: 2px;
+}
+
+/* Container for consistent padding */
+.container {
+  width: 100%;
+  max-width: 1280px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+@media (min-width: 640px) {
+  .container {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .container {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+
+/* Scrollbar styling for WebKit browsers */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(var(--color-bg), 0.1);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-fairy-tale-300);
+  border-radius: var(--radius-full);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-fairy-tale-400);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.animate-fade-in {
+  animation: fadeIn var(--transition-normal);
+}
+
+.animate-slide-up {
+  animation: slideUp var(--transition-normal);
+}
+
+/* Utility classes */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
 }

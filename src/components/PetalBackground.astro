@@ -1,13 +1,13 @@
 ---
-// SVG-based petal animation
-// This is a simpler alternative that doesn't require canvas
+// Improved SVG-based petal animation with proper scroll effects
 
 interface Props {
   petalCount?: number;
   className?: string;
+  scrollFade?: boolean;
 }
 
-const { petalCount = 20, className = "" } = Astro.props;
+const { petalCount = 20, className = "", scrollFade = true } = Astro.props;
 
 // Define petal shapes - these will be randomly selected
 const petalShapes = [
@@ -21,28 +21,28 @@ const petalShapes = [
   "M0,0 C4,-9 16,-9 20,0 C16,7 4,7 0,0"      // Small, round petal
 ];
 
-// Define petal colors
+// Define petal colors - soft pinks and light colors
 const petalColors = ['#FFDEE2', '#FFBDC5', '#FF9CA8', '#FFF0F2', '#FDE1D3'];
 
-// Generate random petals
+// Generate random petals with improved properties
 const petals = Array.from({ length: petalCount }).map((_, i) => {
   return {
     id: `petal-${i}`,
     x: Math.random() * 100, // Position as percentage
-    y: -10 - Math.random() * 20, // Increased starting height variation
-    size: Math.random() * 8 + 4, // Even smaller size range (4-12)
+    y: -10 - Math.random() * 20, // Start above viewport
+    size: Math.random() * 8 + 4, // Size range (4-12)
     rotation: Math.random() * 360,
     color: petalColors[Math.floor(Math.random() * petalColors.length)],
     shape: petalShapes[Math.floor(Math.random() * petalShapes.length)],
-    // Animation properties
+    // Improved animation properties
     duration: Math.random() * 10 + 6, // 6-16 seconds to fall
     delay: Math.random() * 2, // 0-2 second delay
-    swayAmount: Math.random() * 4 + 1 // 1-5% horizontal sway for more natural movement
+    swayAmount: Math.random() * 4 + 1 // 1-5% horizontal sway
   };
 });
 ---
 
-<div class={`absolute inset-0 w-full h-full pointer-events-none overflow-hidden ${className}`} aria-hidden="true">
+<div id="petal-container" class={`absolute inset-0 w-full h-full pointer-events-none overflow-hidden ${className}`} aria-hidden="true">
   <svg 
     class="absolute inset-0 w-full h-full" 
     viewBox="0 0 100 100" 
@@ -95,3 +95,27 @@ const petals = Array.from({ length: petalCount }).map((_, i) => {
     will-change: transform;
   }
 </style>
+
+{scrollFade && (
+<script>
+  // Improved scroll handling for petal animation
+  document.addEventListener('DOMContentLoaded', () => {
+    const petalContainer = document.getElementById('petal-container');
+    if (!petalContainer) return;
+    
+    window.addEventListener('scroll', () => {
+      // Calculate how far down the page has been scrolled
+      const scrollPosition = window.scrollY;
+      const viewportHeight = window.innerHeight;
+      const scrollPercentage = Math.min(scrollPosition / (viewportHeight * 0.7), 1);
+      
+      // Apply opacity and blur based on scroll percentage
+      const opacityValue = 1 - scrollPercentage * 0.9; // Fades to almost zero
+      const blurAmount = scrollPercentage * 5; // Up to 5px blur
+      
+      petalContainer.style.opacity = `${opacityValue}`;
+      petalContainer.style.filter = `blur(${blurAmount}px)`;
+    });
+  });
+</script>
+)}

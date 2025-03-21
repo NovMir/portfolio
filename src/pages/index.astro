@@ -1,37 +1,105 @@
 ---
 import BaseLayout from '../layouts/ScrollLayout.astro';
-
+import Hero from '../components/Hero.astro';
 import ProjectPreview from '../components/ProjectPreview.astro';
 import PostPreview from '../components/PostPreview.astro';
 import Button from '../components/Button.astro';
 import { getCollection } from 'astro:content';
-import { formatBlogPosts, sortItemsByDateDesc } from '../js/utils';
+import { sortItemsByDateDesc } from '../js/utils';
 import siteConfig from '../data/sitedata.config';
 
-const posts = (await getCollection('blog')).sort(formatBlogPosts).slice(0, 3);
-const projects = (await getCollection('projects')).sort(sortItemsByDateDesc).slice(0, 3);
+// Get latest content
+const posts = await getCollection('blog', (post) => !post.data.draft);
+const sortedPosts = posts.sort((a, b) => 
+  new Date(b.data.publishDate).getTime() - new Date(a.data.publishDate).getTime()
+).slice(0, 3);
+
+const projects = await getCollection('projects');
+const sortedProjects = projects.sort((a, b) => 
+  new Date(b.data.publishDate).getTime() - new Date(a.data.publishDate).getTime()
+).slice(0, 3);
+
+// Get hero content from site config
+const { hero } = siteConfig;
 ---
 
 <BaseLayout title={siteConfig.title} description={siteConfig.description}>
-  
-
-  <section id="projects" class="mb-24">
-    <h2 class="text-2xl font-serif italic mb-8">Featured Projects</h2>
-    {projects.map((project) => (
-      <ProjectPreview project={project} />
-    ))}
-    <div class="mt-6">
-      <Button href="/portfolio">View All Projects</Button>
+  <!-- Hero Section -->
+  <Hero 
+    showPetals={true} 
+    petalCount={25}
+    title={hero?.title}
+    subtitle={hero?.text}
+  >
+    <div class="flex flex-wrap justify-center gap-4 mt-8">
+      {hero?.actions?.map((action) => (
+        <Button 
+          href={action.href} 
+          variant={action.text.includes("Touch") ? "primary" : "secondary"}
+          size="lg"
+        >
+          {action.text}
+        </Button>
+      ))}
     </div>
-  </section>
+  </Hero>
 
-  <section id="blog" class="mb-24">
-    <h2 class="text-2xl font-serif italic mb-8">Latest Blog Posts</h2>
-    {posts.map((post) => (
-      <PostPreview post={post} />
-    ))}
-    <div class="mt-6">
-      <Button href="/blog">View All Posts</Button>
-    </div>
-  </section>
+  <!-- Main Content -->
+  <div class="container mx-auto px-4 py-16">
+    <!-- Projects Section -->
+    <section id="projects" class="mb-24">
+      <div class="flex justify-between items-center mb-8">
+        <h2 class="text-2xl md:text-3xl font-serif italic text-pink-700 dark:text-softpink">
+          Featured Projects
+        </h2>
+        <Button href="/projects" variant="secondary" size="sm">
+          View All
+        </Button>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {sortedProjects.map((project) => (
+          <ProjectPreview project={project} />
+        ))}
+      </div>
+    </section>
+
+    <!-- Blog Section -->
+    <section id="blog" class="mb-24">
+      <div class="flex justify-between items-center mb-8">
+        <h2 class="text-2xl md:text-3xl font-serif italic text-pink-700 dark:text-softpink">
+          Latest Blog Posts
+        </h2>
+        <Button href="/blog" variant="secondary" size="sm">
+          View All
+        </Button>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {sortedPosts.map((post) => (
+          <PostPreview post={post} />
+        ))}
+      </div>
+    </section>
+
+    <!-- About/Contact Section -->
+    <section id="contact" class="bg-fairy_tale-100/20 dark:bg-fairy_tale-800/20 rounded-xl p-8 mb-16">
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between">
+        <div class="md:w-2/3 mb-6 md:mb-0">
+          <h2 class="text-2xl md:text-3xl font-serif italic text-pink-700 dark:text-softpink mb-4">
+            Get in Touch
+          </h2>
+          <p class="text-fairy_tale-600 dark:text-fairy_tale-300 max-w-xl">
+            Interested in working together? I'm always open to new opportunities
+            and collaborations. Let's create something amazing together!
+          </p>
+        </div>
+        <div>
+          <Button href="/contact" variant="primary" size="lg">
+            Contact Me
+          </Button>
+        </div>
+      </div>
+    </section>
+  </div>
 </BaseLayout>

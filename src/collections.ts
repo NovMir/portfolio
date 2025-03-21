@@ -22,7 +22,7 @@ const blog = defineCollection({
 
 // Portfolio Collection
 const projects = defineCollection({
-    loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/pages' }),
+    loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/projects' }),
 
     schema: z.object({
         title: z.string().min(5),
@@ -39,7 +39,7 @@ const projects = defineCollection({
 
 // Pages Collection (Home, About, Contact, etc.)
 const pages = defineCollection({
-    loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/projects' }),
+    loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/pages' }),
 
     schema: z.object({
         title: z.string(),

@@ -10,8 +10,8 @@ const logo = siteConfig.logo;
 const { headerNavLinks = [] } = siteConfig;
 ---
 
-
-  <div class="container flex h-16 items-center justify-between">
+<nav class="fixed top-0 z-40 w-full'">
+  <div class="container mx-auto px-4 h-16 flex items-center justify-between bg-transparent">
     <div class="flex items-center gap-6">
       <a href="/" class="font-heading text-2xl font-bold text-mountbatten_pink-500 dark:text-mountbatten_pink-300">
         {logo ? (
@@ -22,13 +22,13 @@ const { headerNavLinks = [] } = siteConfig;
       </a>
       
       <!-- Desktop Navigation -->
-      <nav class="hidden md:flex items-center space-x-6">
+      <div class="hidden md:flex items-center space-x-6">
         {headerNavLinks.map((link) => (
           <NavLink href={link.href}>{link.text}</NavLink>
         ))}
         <DarkModeToggle />
         <Button href="/contact" size="sm" variant="primary">Get in Touch</Button>
-      </nav>
+      </div>
     </div>
     
     <!-- Mobile Navigation -->
@@ -36,7 +36,7 @@ const { headerNavLinks = [] } = siteConfig;
       <DarkModeToggle />
       <button
         id="menu-toggle"
-        class="ml-2 p-2 rounded-md text-fairy_tale-300 dark:text-fairy_tale-400 hover:bg-fairy_tale-100 dark:hover:bg-fairy_tale-800"
+        class="ml-2 p-2 rounded-md text-fairy_tale-600 dark:text-fairy_tale-400 hover:bg-fairy_tale-100 dark:hover:bg-fairy_tale-800"
         aria-label="Toggle menu"
       >
         <svg
@@ -92,50 +92,48 @@ const { headerNavLinks = [] } = siteConfig;
       </div>
     </nav>
   </div>
-
+</nav>
 
 <script>
-  // Mobile menu toggle
-  const menuToggle = document.getElementById('menu-toggle');
-  const mobileMenu = document.getElementById('mobile-menu');
-  const menuIcon = document.getElementById('menu-icon');
-  const closeIcon = document.getElementById('close-icon');
-  const body = document.body;
+  // Improved mobile menu toggle with proper event handling
+  document.addEventListener('DOMContentLoaded', () => {
+    const menuToggle = document.getElementById('menu-toggle');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const menuIcon = document.getElementById('menu-icon');
+    const closeIcon = document.getElementById('close-icon');
+    const body = document.body;
 
-  menuToggle?.addEventListener('click', () => {
-    if (mobileMenu) {
+    if (!menuToggle || !mobileMenu || !menuIcon || !closeIcon) return;
+
+    menuToggle.addEventListener('click', () => {
       mobileMenu.classList.toggle('hidden');
       mobileMenu.classList.toggle('flex');
-    }
-    menuIcon?.classList.toggle('hidden');
-    closeIcon?.classList.toggle('hidden');
-    body.classList.toggle('overflow-hidden'); // Prevent scrolling when menu is open
-  });
-
-  // Close mobile menu when clicking on a link
-  const mobileLinks = mobileMenu?.querySelectorAll('a');
-  mobileLinks?.forEach((link) => {
-    link.addEventListener('click', () => {
-      if (mobileMenu) {
-        mobileMenu.classList.add('hidden');
-        mobileMenu.classList.remove('flex');
-      }
-      menuIcon?.classList.remove('hidden');
-      closeIcon?.classList.add('hidden');
-      body.classList.remove('overflow-hidden');
+      menuIcon.classList.toggle('hidden');
+      closeIcon.classList.toggle('hidden');
+      body.classList.toggle('overflow-hidden'); // Prevent scrolling when menu is open
     });
-  });
 
-  // Close mobile menu when the window resizes to desktop size
-  window.addEventListener('resize', () => {
-    if (window.innerWidth >= 768) { // 768px is the md breakpoint in Tailwind
-      if (mobileMenu) {
+    // Close mobile menu when clicking on a link
+    const mobileLinks = mobileMenu.querySelectorAll('a');
+    mobileLinks.forEach((link) => {
+      link.addEventListener('click', () => {
         mobileMenu.classList.add('hidden');
         mobileMenu.classList.remove('flex');
+        menuIcon.classList.remove('hidden');
+        closeIcon.classList.add('hidden');
+        body.classList.remove('overflow-hidden');
+      });
+    });
+
+    // Close mobile menu when the window resizes to desktop size
+    window.addEventListener('resize', () => {
+      if (window.innerWidth >= 768) { // 768px is the md breakpoint in Tailwind
+        mobileMenu.classList.add('hidden');
+        mobileMenu.classList.remove('flex');
+        menuIcon.classList.remove('hidden');
+        closeIcon.classList.add('hidden');
+        body.classList.remove('overflow-hidden');
       }
-      menuIcon?.classList.remove('hidden');
-      closeIcon?.classList.add('hidden');
-      body.classList.remove('overflow-hidden');
-    }
+    });
   });
 </script>

@@ -2,27 +2,47 @@
 import BaseHead from "../components/BaseHead.astro";
 import Footer from "../components/Footer.astro";
 import NavBar from "../components/NavBar.astro";
-import HeroSection from "../components/Hero.astro"; // Import HeroSection
 import '../styles/global.css';
 
-interface HeadProps {
+// Define the core layout properties
+interface Props {
   title?: string;
   description?: string;
-}
-
-export interface Props extends HeadProps {
+  image?: {
+    src: string;
+    alt?: string;
+  };
+  frontmatter?: any;
+  robots?: string;
+  pageType?: string;
   showHeader?: boolean;
+  showFooter?: boolean;
 }
 
-const { showHeader = true, ...head } = Astro.props;
+// Set default props using destructuring
+const { 
+  title,
+  description,
+  image,
+  frontmatter,
+  robots,
+  pageType = "website",
+  showHeader = true,
+  showFooter = true
+} = Astro.props;
 ---
 
 <!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <BaseHead {...head} />
+    <BaseHead 
+      title={title} 
+      description={description} 
+      image={image}
+      frontmatter={frontmatter}
+      robots={robots}
+      pageType={pageType}
+    />
 
     <!-- Prevent flash of wrong theme -->
     <script is:inline>
@@ -43,75 +63,16 @@ const { showHeader = true, ...head } = Astro.props;
       }
     </script>
   </head>
-  <body class="relative bg-white dark:bg-fairy_tale-100 text-fairy_tale-800 dark:text-fairy_tale-200">
-    <!-- NavBar -->
+  <body class="min-h-screen bg-white dark:bg-raisin_black text-fairy_tale-800 dark:text-fairy_tale-200 flex flex-col">
+    <!-- Site Header/Navigation -->
     {showHeader && <NavBar />}
 
-    <!-- Hero Section -->
-    <div class="mt-8"> <!-- Add margin-top for spacing -->
-      <HeroSection height="60vh" showPetals={false}>
-        <h1 class="text-4xl font-bold text-white">Welcome to My Website</h1>
-        <p class="text-white mt-4">This is a hero section with a dynamic background.</p>
-      </HeroSection>
-    </div>
-
     <!-- Main Content -->
-    <main class="relative z-10 min-h-screen">
+    <main class="flex-grow">
       <slot />
     </main>
 
     <!-- Footer -->
-    <Footer />
-
-    <script>
-      // Active section highlighting
-      const observeOptions = {
-        threshold: 0.2,
-        rootMargin: '-80px 0px 0px 0px'
-      };
-
-      const sections = document.querySelectorAll('section[id]');
-      const navLinks = document.querySelectorAll('a[href^="#"]');
-
-      if (sections.length > 0) {
-        const observer = new IntersectionObserver((entries) => {
-          entries.forEach(entry => {
-            if (entry.isIntersecting) {
-              const id = entry.target.getAttribute('id');
-              navLinks.forEach(link => {
-                if (link.getAttribute('href') === `#${id}`) {
-                  link.classList.add('text-blush-500', 'font-medium');
-                  link.classList.remove('text-fairy_tale-600', 'dark:text-fairy_tale-300');
-                } else {
-                  link.classList.remove('text-blush-500', 'font-medium');
-                  link.classList.add('text-fairy_tale-600', 'dark:text-fairy_tale-300');
-                }
-              });
-            }
-          });
-        }, observeOptions);
-
-        sections.forEach(section => observer.observe(section));
-      }
-
-      // Smooth scroll with header offset
-      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', (e) => {
-          e.preventDefault();
-          const header = document.querySelector('header');
-          const headerHeight = header ? header.offsetHeight : 0;
-          const href = anchor.getAttribute('href');
-          const target = href ? document.querySelector(href) : null;
-
-          if (target) {
-            const targetPosition = target.getBoundingClientRect().top + window.pageYOffset;
-            window.scrollTo({
-              top: targetPosition - headerHeight,
-              behavior: 'smooth'
-            });
-          }
-        });
-      });
-    </script>
+    {showFooter && <Footer />}
   </body>
 </html>
